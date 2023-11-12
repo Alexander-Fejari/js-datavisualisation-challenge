@@ -1,39 +1,47 @@
 import Chart from 'chart.js/auto';
-import { getJsonData } from "./requestAjax.js";
+import { getJsonData } from './requestAjax';
 
-// récupère h1
-const getH1 = document.querySelector('#firstHeading');
+getJsonData().then(data => {
+    const valuesArray0 = data.map(item => item[0]);
+    const valuesArray1 = data.map(item => item[1]);
 
-// Créez un élément canvas
-const canvasElement = document.createElement('canvas');
-canvasElement.id = 'graphAjax'
+    const heading = document.querySelector('#firstHeading');
+    const canvasElement = document.createElement('canvas');
+    canvasElement.id = 'graphAjax';
+    heading.insertAdjacentElement('afterend', canvasElement);
 
-// Insérez le div au-dessus de la table1
-getH1.parentNode.insertBefore(canvasElement, getH1.nextSibling);
-
-// Récupère les données JSON
-let jsonData = getJsonData();
-
-// Crée les tableaux de données
-let arrays = jsonData.arrays;
-let [data0, data1] = arrays;
-
-// Crée le graphique
-new Chart(canvasElement, {
-    type: 'line',
-    data: {
-        labels: data0.map(d => d.label),
-        datasets: [
-            {
-                label: 'Array 0',
-                data: data0.map(d => d.value),
-                borderColor: 'blue',
+    new Chart(canvasElement, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: 11 }, (_, i) => i.toString()), // Graduations de 0 à 10 sur l'axe des x
+            datasets: [
+                {
+                    label: 'Array 0',
+                    data: valuesArray0,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false,
+                },
+                {
+                    label: 'Array 1',
+                    data: valuesArray1,
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderWidth: 1,
+                    fill: false,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
+                },
+                y: {
+                    display: false, // Masquer l'axe des y
+                },
             },
-            {
-                label: 'Array 1',
-                data: data1.map(d => d.value),
-                borderColor: 'red',
-            },
-        ],
-    },
+        },
+    });
+}).catch(error => {
+    console.error(`Erreur lors de la récupération des données : ${error}`);
 });

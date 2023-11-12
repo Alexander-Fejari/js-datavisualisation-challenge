@@ -6,7 +6,7 @@ extractDataFromTable('table1');
 
 console.log(data); // Vérifiez les données extraites pour la table 1
 
-// Créez un élément div
+// Créez un élément canvas
 const canvasElement = document.createElement('canvas');
 canvasElement.id = 'graph1'
 
